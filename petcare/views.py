@@ -14,7 +14,7 @@ import requests
 import json
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer, ABC):
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         # print(user)

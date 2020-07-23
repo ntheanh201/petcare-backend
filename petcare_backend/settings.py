@@ -144,7 +144,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), "/")
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-AUTH_USER_MODEL = "petcare.CustomMember"
+AUTH_USER_MODEL = "petcare.PetcareUser"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
@@ -168,8 +168,8 @@ SIMPLE_JWT = {
 
 DJOSER = {
     "SERIALIZERS": {
-        "user": "petcare.serializers.CustomMemberSerializer",
-        "current_user": "petcare.serializers.CustomMemberSerializer",
+        "user": "petcare.serializers.PetcareMemberSerializer",
+        "current_user": "petcare.serializers.PetcareMemberSerializer",
     }
 }
 
