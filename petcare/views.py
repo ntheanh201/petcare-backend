@@ -1,13 +1,11 @@
-from rest_framework.views import APIView
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import viewsets, permissions
 
 # custom TokenObtain view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-import requests
-import json
 
 from petcare.models import (
     Product,
@@ -37,68 +35,107 @@ from petcare.serializers import (
 )
 
 
-class PetcareUserViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
+class PetcareUserViewSet(viewsets.ViewSet):
     queryset = PetcareUser.objects.all()
     serializer_class = PetcareMemberSerializer
 
+    # def retrieve(self, request, pk=None):
+    #     username = request.data.get("username")
+    #     password = request.data.get("password")
+    #
+    #     print(request.user.username)
+    #     queryset = Shop.objects.all()
+    #     user = get_object_or_404(queryset, pk=pk)
+    #     serializer = PetcareMemberSerializer(user)
+    #     return Response(serializer.data)
+
+
 
 class ProductViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
 class ShopViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    # def retrieve(self, request, pk=None):
+    #     username = request.user.username
+    #     queryset = Shop.objects.filter(username=username)
+    #     print(queryset)
+
+    def create(self, request, *args, **kwargs):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = PetcareUser(username=username, is_superuser=False, isShop=True)
+        user.set_password(password)
+        user.save()
+        return super().create(request, *args, **kwargs)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
 
 class SaleViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Sale.objects.all()
     serializer_class = SaleSerializer
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
 class CartViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    def create(self, request, *args, **kwargs):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = PetcareUser(username=username, password=password, is_superuser=False, isCustomer=True)
+        user.save()
+        return super().create(request, *args, **kwargs)
 
 
 class AdminViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    def create(self, request, *args, **kwargs):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        user = PetcareUser(username=username, password=password, is_superuser=False, isAdmin=True)
+        user.save()
+        return super().create(request, *args, **kwargs)
 
 
 class ClinicViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Clinic.objects.all()
     serializer_class = ClinicSerializer
 
 
 class ChatViewSet(viewsets.ModelViewSet):
-    # permission_classes = (IsAuthenticated,)
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
 
@@ -106,11 +143,8 @@ class ChatViewSet(viewsets.ModelViewSet):
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
-        # print(user)
         token = super().get_token(user)
-        # print(type(token))
         token["id"] = user.id
-        # print(token)
         return token
 
 

@@ -31,6 +31,9 @@ class PetcareUser(AbstractUser):
     address = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
     dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
+    isAdmin = models.BooleanField(null=False, default=False)
+    isShop = models.BooleanField(null=False, default=False)
+    isCustomer = models.BooleanField(null=False, default=False)
 
     def __str__(self):
         return "user: {}".format(self.username)
@@ -39,7 +42,7 @@ class PetcareUser(AbstractUser):
 class Shop(models.Model):
     username = models.CharField(max_length=100, default="", unique=True)
     password = models.CharField(max_length=32, default="")
-    businessLicense = models.TextField()
+    businessLicense = models.TextField(null=True, default="", blank=True)
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
