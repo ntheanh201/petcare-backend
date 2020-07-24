@@ -37,7 +37,7 @@ class PetcareUser(AbstractUser):
 
 
 class Shop(models.Model):
-    username = models.CharField(max_length=100, default="")
+    username = models.CharField(max_length=100, default="", unique=True)
     password = models.CharField(max_length=32, default="")
     businessLicense = models.TextField()
     avatar = models.FileField(
@@ -51,9 +51,12 @@ class Shop(models.Model):
     isVip = models.BooleanField(null=False, default=False)
     vipExpires = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.username}"
+
 
 class Customer(models.Model):
-    username = models.CharField(max_length=100, default="")
+    username = models.CharField(max_length=100, default="", unique=True)
     password = models.CharField(max_length=32, default="")
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
@@ -74,14 +77,8 @@ class Customer(models.Model):
     email = models.CharField(max_length=50, null=True, blank=True)
     dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
 
-
-class Cart(models.Model):
-    name = models.CharField(max_length=1024, null=False, blank=False)
-    price = models.FloatField(null=False)
-    quantity = models.IntegerField(null=False, default=1)
-    userId = models.ForeignKey(
-        Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
-    )
+    def __str__(self):
+        return f"{self.username}"
 
 
 class Product(models.Model):
@@ -98,7 +95,23 @@ class Product(models.Model):
     shopId = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
-    carts = models.ManyToManyField(Cart, null=True, blank=True, default=None)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Cart(models.Model):
+    price = models.FloatField(null=False)
+    quantity = models.IntegerField(null=False, default=1)
+    userId = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    )
+    productId = models.ForeignKey(
+        Product, on_delete=models.CASCADE, null=True, default=None, blank=True,
+    )
+
+    def __str__(self):
+        return f"{self.userId.username} - {self.productId.name}"
 
 
 class Admin(models.Model):
@@ -127,6 +140,9 @@ class Admin(models.Model):
     customers = models.ManyToManyField(Customer, null=True, blank=True, default=None)
     products = models.ManyToManyField(Product, null=True, blank=True, default=None)
 
+    def __str__(self):
+        return f"{self.username}"
+
 
 class Clinic(models.Model):
     name = models.CharField(max_length=100)
@@ -137,10 +153,12 @@ class Clinic(models.Model):
     specialist = models.CharField(max_length=100, null=True, blank=True)
     data = models.TextField()
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class Order(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
-    name = models.CharField(max_length=1000, null=False, blank=False)
     price = models.FloatField(null=False)
     amount = models.IntegerField(null=False)
     deliveriedOn = models.DateTimeField(null=True, blank=True)
@@ -172,6 +190,9 @@ class Order(models.Model):
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
 
+    def __str__(self):
+        return f"{self.userId.username} - {self.productId.name}"
+
     def extra_data_dict(self) -> Dict:
         if self.extra_data is None or len(self.extra_data) == 0:
             return {}
@@ -189,6 +210,9 @@ class Review(models.Model):
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
 
+    def __str__(self):
+        return f"{self.userId.username} - {self.shopId.username} - {self.rating}"
+
 
 class Sale(models.Model):
     name = models.CharField(max_length=1024, null=False, blank=False)
@@ -197,6 +221,9 @@ class Sale(models.Model):
     shopId = models.ForeignKey(
         Shop, on_delete=models.SET_NULL, null=True, default=None, blank=True,
     )
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Chat(models.Model):
@@ -207,3 +234,6 @@ class Chat(models.Model):
         Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
     )
     content = models.TextField(null=False, blank=False)
+
+    def __str__(self):
+        return f"{self.shopId.username} - {self.userId}: {self.content}"
