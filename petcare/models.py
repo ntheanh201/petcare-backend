@@ -7,6 +7,8 @@ from django.db import models
 from django.conf import settings
 import uuid
 
+from petcare.enums import OrderStatus, Gender
+
 
 def custom_media_path(instance, filename):
     file_ext = filename.split(".")[-1]
@@ -43,8 +45,11 @@ class Shop(models.Model):
     )
     phone = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=100, null=True, blank=True)
+    warehouseAddress = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
     ratings = models.FloatField(null=True, blank=True)
+    isVip = models.BooleanField(null=False, default=False)
+    vipExpires = models.DateTimeField(null=True, blank=True)
 
 
 class Customer(models.Model):
@@ -53,7 +58,16 @@ class Customer(models.Model):
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
-    gender = models.CharField(max_length=15, null=True, blank=True)
+    gender = models.SmallIntegerField(
+        null=False,
+        blank=False,
+        choices=[
+            (Gender.MALE.value, Gender.MALE.name),
+            (Gender.FEMALE.value, Gender.FEMALE.name),
+            (Gender.UNDEFINED.value, Gender.UNDEFINED.name),
+        ],
+        default=Gender.UNDEFINED.value,
+    )
     fullname = models.CharField(max_length=1024, null=True, blank=True)
     phone = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=100, null=True, blank=True)
@@ -79,11 +93,12 @@ class Product(models.Model):
     productImage = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
+    isApproval = models.BooleanField(default=False, null=False)
     buyAmount = models.IntegerField(null=False, default=0)
     shopId = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
-    carts = models.ManyToManyField(Cart)
+    carts = models.ManyToManyField(Cart, null=True, blank=True, default=None)
 
 
 class Admin(models.Model):
@@ -92,16 +107,25 @@ class Admin(models.Model):
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
-    gender = models.CharField(max_length=15, null=True, blank=True)
+    gender = models.SmallIntegerField(
+        null=False,
+        blank=False,
+        choices=[
+            (Gender.MALE.value, Gender.MALE.name),
+            (Gender.FEMALE.value, Gender.FEMALE.name),
+            (Gender.UNDEFINED.value, Gender.UNDEFINED.name),
+        ],
+        default=Gender.UNDEFINED.value,
+    )
     fullname = models.CharField(max_length=1024, null=True, blank=True)
     phone = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
     dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
     role = models.IntegerField(default=1, null=False, blank=False)
-    shops = models.ManyToManyField(Shop)
-    customers = models.ManyToManyField(Customer)
-    products = models.ManyToManyField(Product)
+    shops = models.ManyToManyField(Shop, null=True, blank=True, default=None)
+    customers = models.ManyToManyField(Customer, null=True, blank=True, default=None)
+    products = models.ManyToManyField(Product, null=True, blank=True, default=None)
 
 
 class Clinic(models.Model):
@@ -122,6 +146,17 @@ class Order(models.Model):
     deliveriedOn = models.DateTimeField(null=True, blank=True)
     imageURL = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
+    )
+    status = models.SmallIntegerField(
+        null=False,
+        blank=False,
+        choices=[
+            (OrderStatus.CHECKING.value, OrderStatus.CHECKING.name),
+            (OrderStatus.SHIPPING.value, OrderStatus.SHIPPING.name),
+            (OrderStatus.DONE.value, OrderStatus.DONE.name),
+            (OrderStatus.CANCEL.value, OrderStatus.CANCEL.name),
+        ],
+        default=OrderStatus.CHECKING.value,
     )
     longDescription = models.TextField(null=True, blank=True)
     shortDescription = models.TextField(null=True, blank=True)
