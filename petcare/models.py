@@ -35,66 +35,39 @@ class PetcareUser(AbstractUser):
 
 
 class Shop(models.Model):
-
-    # software = models.SmallIntegerField(
-    #     null=False,
-    #     blank=False,
-    #     choices=[
-    #         (SellerSoftware.HARAVAN.value, SellerSoftware.HARAVAN.name),
-    #         (SellerSoftware.MSHOP_KEEPER.value, SellerSoftware.MSHOP_KEEPER.name),
-    #         (SellerSoftware.KIOT_VIET.value, SellerSoftware.KIOT_VIET.name),
-    #         (SellerSoftware.UNKNOWN.value, SellerSoftware.UNKNOWN.name),
-    #     ],
-    #     default=SellerSoftware.UNKNOWN.value,
-    # )
-    name = models.CharField(max_length=100, null=True, blank=True)
-    email = models.CharField(max_length=100, null=True, blank=True)
-    userId = models.ForeignKey(PetcareUser, on_delete=models.CASCADE, null=True, default=None)
+    username = models.CharField(max_length=100, default="")
+    password = models.CharField(max_length=32, default="")
     businessLicense = models.TextField()
-    address = models.CharField(max_length=1024, null=False, blank=False, default="")
-    phoneNumber = models.CharField(max_length=17, blank=True)
-
-    def get_mail(self):
-        if self.userId is not None:
-            return self.userId.email
-        return "unknown"
-
-    def get_name(self):
-        return self.name
-
-    def get_id(self):
-        return self.id
-
-    def __str__(self):
-        if self.userId is not None:
-            return f"{self.get_id()}-{self.get_name()}-{self.get_mail()}"
+    avatar = models.FileField(
+        upload_to=custom_media_path, max_length=100, default="default.jpg"
+    )
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
+    ratings = models.FloatField(null=True, blank=True)
 
 
-# class Customer(models.Model):
-#     first_name = models.CharField(max_length=1024, null=False, blank=False, default="")
-#     last_name = models.CharField(max_length=1024, null=False, blank=False, default="")
-#     email = models.EmailField(max_length=254, null=False)
-#     address = models.CharField(max_length=1024, null=False, blank=False, default="")
-#     phone_number = models.CharField(max_length=17, blank=True)
-#
-#     # A json string used to store dynamic data such as tokens, secrets...
-#     extra_data = models.TextField(null=False, blank=True, default="")
-#
-#     @property
-#     def extra_data_as_dict(self) -> Dict:
-#         return json.loads(self.extra_data)
-#
-#     def get_extra_data_field(self, key: str):
-#         extra_data = self.extra_data_as_dict
-#         if key not in extra_data:
-#             raise Exception(f"{key} not found in extra_data for {self}")
-#         return extra_data[key]
-#
-#     def get_name(self):
-#         return f"{self.first_name} {self.last_name}"
-#
-#     def __str__(self):
-#         return f"{self.id}-{self.get_name()}-{self.email}"
+class Customer(models.Model):
+    username = models.CharField(max_length=100, default="")
+    password = models.CharField(max_length=32, default="")
+    avatar = models.FileField(
+        upload_to=custom_media_path, max_length=100, default="default.jpg"
+    )
+    gender = models.CharField(max_length=15, null=True, blank=True)
+    fullname = models.CharField(max_length=1024, null=True, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
+    dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
+
+
+class Cart(models.Model):
+    name = models.CharField(max_length=1024, null=False, blank=False)
+    price = models.FloatField(null=False)
+    quantity = models.IntegerField(null=False, default=1)
+    userId = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    )
 
 
 class Product(models.Model):
@@ -108,31 +81,61 @@ class Product(models.Model):
     )
     buyAmount = models.IntegerField(null=False, default=0)
     shopId = models.ForeignKey(
-        Shop, on_delete=models.SET_NULL, null=True, default=None, blank=True,
+        Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
+    carts = models.ManyToManyField(Cart)
+
+
+class Admin(models.Model):
+    username = models.CharField(max_length=100, default="")
+    password = models.CharField(max_length=32, default="")
+    avatar = models.FileField(
+        upload_to=custom_media_path, max_length=100, default="default.jpg"
+    )
+    gender = models.CharField(max_length=15, null=True, blank=True)
+    fullname = models.CharField(max_length=1024, null=True, blank=True)
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True, blank=True)
+    dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
+    role = models.IntegerField(default=1, null=False, blank=False)
+    shops = models.ManyToManyField(Shop)
+    customers = models.ManyToManyField(Customer)
+    products = models.ManyToManyField(Product)
+
+
+class Clinic(models.Model):
+    name = models.CharField(max_length=100)
+    avatar = models.FileField(
+        upload_to=custom_media_path, max_length=100, default="default.jpg"
+    )
+    address = models.CharField(max_length=100, null=True, blank=True)
+    specialist = models.CharField(max_length=100, null=True, blank=True)
+    data = models.TextField()
 
 
 class Order(models.Model):
+    createdAt = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=1000, null=False, blank=False)
     price = models.FloatField(null=False)
     amount = models.IntegerField(null=False)
-
-    userId = models.ForeignKey(
-        PetcareUser, on_delete=models.SET_NULL, null=True, default=None, blank=True,
-    )
-    productId = models.ForeignKey(
-        Product, on_delete=models.SET_NULL, null=True, default=None, blank=True,
-    )
-    createdAt = models.DateTimeField(auto_now_add=True)
     deliveriedOn = models.DateTimeField(null=True, blank=True)
-    averageRating = models.IntegerField(null=True, blank=True)
-    categories = ArrayField(ArrayField(models.IntegerField()))
     imageURL = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
     longDescription = models.TextField(null=True, blank=True)
     shortDescription = models.TextField(null=True, blank=True)
+    address = models.CharField(max_length=1000, null=True, blank=True)
     extra_data = models.TextField(blank=True, null=False, default="{}")
+    userId = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=True, default=None, blank=True,
+    )
+    productId = models.ForeignKey(
+        Product, on_delete=models.CASCADE, null=True, default=None, blank=True,
+    )
+    shopId = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
+    )
 
     def extra_data_dict(self) -> Dict:
         if self.extra_data is None or len(self.extra_data) == 0:
@@ -142,17 +145,30 @@ class Order(models.Model):
 
 class Review(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
-    productName = models.CharField(max_length=100, null=False, blank=False)
-    rating = models.IntegerField(null=True)
+    rating = models.FloatField(null=False, default=0)
     reviewContent = models.CharField(max_length=1000, null=True, blank=True)
-    productImage = models.FileField(
-        upload_to=custom_media_path, max_length=100, default="default.jpg"
+    userId = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
-    productPrice = models.FloatField(null=False)
-    productType = models.CharField(max_length=100, null=False, blank=False)
+    shopId = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
+    )
 
 
 class Sale(models.Model):
     name = models.CharField(max_length=1024, null=False, blank=False)
     date = models.DateTimeField(auto_now_add=True)
     salePrice = models.FloatField(null=False)
+    shopId = models.ForeignKey(
+        Shop, on_delete=models.SET_NULL, null=True, default=None, blank=True,
+    )
+
+
+class Chat(models.Model):
+    shopId = models.ForeignKey(
+        Shop, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    )
+    userId = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    )
+    content = models.TextField(null=False, blank=False)

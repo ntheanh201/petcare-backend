@@ -7,9 +7,32 @@ from rest_framework import routers
 from petcare import views
 
 # Routers provide an easy way of automatically determining the URL conf.
+from petcare.views import (
+    ProductViewSet,
+    PetcareUserViewSet,
+    ShopViewSet,
+    ReviewViewSet,
+    SaleViewSet,
+    OrderViewSet,
+    ChatViewSet,
+    ClinicViewSet,
+    CustomerViewSet,
+    AdminViewSet,
+    CartViewSet,
+)
+
 ROUTER = routers.DefaultRouter()
-# router.register(r"users", UserViewSet)
-# ROUTER.register(r"accounts", views.UserViewSet)
+ROUTER.register(r"users", PetcareUserViewSet)
+ROUTER.register(r"products", ProductViewSet)
+ROUTER.register(r"sales", SaleViewSet)
+ROUTER.register(r"shops", ShopViewSet)
+ROUTER.register(r"customers", CustomerViewSet)
+ROUTER.register(r"admins", AdminViewSet)
+ROUTER.register(r"orders", OrderViewSet)
+ROUTER.register(r"reviews", ReviewViewSet)
+ROUTER.register(r"clinics", ClinicViewSet)
+ROUTER.register(r"carts", CartViewSet)
+ROUTER.register(r"chats", ChatViewSet)
 
 
 urlpatterns = (

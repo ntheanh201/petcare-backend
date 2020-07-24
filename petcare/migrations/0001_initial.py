@@ -15,114 +15,322 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0011_update_proxy_permissions'),
+        ("auth", "0011_update_proxy_permissions"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PetcareUser',
+            name="PetcareUser",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(blank=True, null=True, verbose_name='last login')),
-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
-                ('username', models.CharField(error_messages={'unique': 'A user with that username already exists.'}, help_text='Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.', max_length=150, unique=True, validators=[django.contrib.auth.validators.UnicodeUsernameValidator()], verbose_name='username')),
-                ('first_name', models.CharField(blank=True, max_length=30, verbose_name='first name')),
-                ('last_name', models.CharField(blank=True, max_length=150, verbose_name='last name')),
-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
-                ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('avatar', models.FileField(default='default.jpg', upload_to=petcare.models.custom_media_path)),
-                ('gender', models.CharField(blank=True, max_length=15, null=True)),
-                ('fullname', models.CharField(blank=True, max_length=1024, null=True)),
-                ('phone', models.CharField(blank=True, max_length=15, null=True)),
-                ('address', models.CharField(blank=True, max_length=100, null=True)),
-                ('email', models.CharField(blank=True, max_length=50, null=True)),
-                ('dateOfBirth', models.CharField(blank=True, max_length=100, null=True)),
-                ('groups', models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups')),
-                ('user_permissions', models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("password", models.CharField(max_length=128, verbose_name="password")),
+                (
+                    "last_login",
+                    models.DateTimeField(
+                        blank=True, null=True, verbose_name="last login"
+                    ),
+                ),
+                (
+                    "is_superuser",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates that this user has all permissions without explicitly assigning them.",
+                        verbose_name="superuser status",
+                    ),
+                ),
+                (
+                    "username",
+                    models.CharField(
+                        error_messages={
+                            "unique": "A user with that username already exists."
+                        },
+                        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+                        max_length=150,
+                        unique=True,
+                        validators=[
+                            django.contrib.auth.validators.UnicodeUsernameValidator()
+                        ],
+                        verbose_name="username",
+                    ),
+                ),
+                (
+                    "first_name",
+                    models.CharField(
+                        blank=True, max_length=30, verbose_name="first name"
+                    ),
+                ),
+                (
+                    "last_name",
+                    models.CharField(
+                        blank=True, max_length=150, verbose_name="last name"
+                    ),
+                ),
+                (
+                    "is_staff",
+                    models.BooleanField(
+                        default=False,
+                        help_text="Designates whether the user can log into this admin site.",
+                        verbose_name="staff status",
+                    ),
+                ),
+                (
+                    "is_active",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
+                        verbose_name="active",
+                    ),
+                ),
+                (
+                    "date_joined",
+                    models.DateTimeField(
+                        default=django.utils.timezone.now, verbose_name="date joined"
+                    ),
+                ),
+                (
+                    "avatar",
+                    models.FileField(
+                        default="default.jpg",
+                        upload_to=petcare.models.custom_media_path,
+                    ),
+                ),
+                ("gender", models.CharField(blank=True, max_length=15, null=True)),
+                ("fullname", models.CharField(blank=True, max_length=1024, null=True)),
+                ("phone", models.CharField(blank=True, max_length=15, null=True)),
+                ("address", models.CharField(blank=True, max_length=100, null=True)),
+                ("email", models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "dateOfBirth",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "groups",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.Group",
+                        verbose_name="groups",
+                    ),
+                ),
+                (
+                    "user_permissions",
+                    models.ManyToManyField(
+                        blank=True,
+                        help_text="Specific permissions for this user.",
+                        related_name="user_set",
+                        related_query_name="user",
+                        to="auth.Permission",
+                        verbose_name="user permissions",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
-                'abstract': False,
+                "verbose_name": "user",
+                "verbose_name_plural": "users",
+                "abstract": False,
             },
-            managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
+            managers=[("objects", django.contrib.auth.models.UserManager()),],
+        ),
+        migrations.CreateModel(
+            name="Image",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "img_url",
+                    models.FileField(
+                        default="default.jpg",
+                        upload_to=petcare.models.custom_media_path,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Image',
+            name="Review",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('img_url', models.FileField(default='default.jpg', upload_to=petcare.models.custom_media_path)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("createdAt", models.DateTimeField(auto_now_add=True)),
+                ("productName", models.CharField(max_length=100)),
+                ("rating", models.IntegerField(null=True)),
+                (
+                    "reviewContent",
+                    models.CharField(blank=True, max_length=1000, null=True),
+                ),
+                (
+                    "productImage",
+                    models.FileField(
+                        default="default.jpg",
+                        upload_to=petcare.models.custom_media_path,
+                    ),
+                ),
+                ("productPrice", models.FloatField()),
+                ("productType", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='Review',
+            name="Sale",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('createdAt', models.DateTimeField(auto_now_add=True)),
-                ('productName', models.CharField(max_length=100)),
-                ('rating', models.IntegerField(null=True)),
-                ('reviewContent', models.CharField(blank=True, max_length=1000, null=True)),
-                ('productImage', models.FileField(default='default.jpg', upload_to=petcare.models.custom_media_path)),
-                ('productPrice', models.FloatField()),
-                ('productType', models.CharField(max_length=100)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=1024)),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("salePrice", models.FloatField()),
             ],
         ),
         migrations.CreateModel(
-            name='Sale',
+            name="Shop",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=1024)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('salePrice', models.FloatField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(blank=True, max_length=100, null=True)),
+                ("email", models.CharField(blank=True, max_length=100, null=True)),
+                ("businessLicense", models.TextField()),
+                ("address", models.CharField(default="", max_length=1024)),
+                ("phoneNumber", models.CharField(blank=True, max_length=17)),
+                (
+                    "userId",
+                    models.ForeignKey(
+                        default=None,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Shop',
+            name="Product",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=100, null=True)),
-                ('email', models.CharField(blank=True, max_length=100, null=True)),
-                ('businessLicense', models.TextField()),
-                ('address', models.CharField(default='', max_length=1024)),
-                ('phoneNumber', models.CharField(blank=True, max_length=17)),
-                ('userId', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=1000)),
+                ("price", models.FloatField()),
+                ("amount", models.IntegerField()),
+                ("productType", models.CharField(max_length=1024)),
+                ("rate", models.FloatField()),
+                (
+                    "productImage",
+                    models.FileField(
+                        default="default.jpg",
+                        upload_to=petcare.models.custom_media_path,
+                    ),
+                ),
+                ("buyAmount", models.IntegerField(default=0)),
+                (
+                    "shopId",
+                    models.ForeignKey(
+                        blank=True,
+                        default=None,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="petcare.Shop",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Product',
+            name="Order",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=1000)),
-                ('price', models.FloatField()),
-                ('amount', models.IntegerField()),
-                ('productType', models.CharField(max_length=1024)),
-                ('rate', models.FloatField()),
-                ('productImage', models.FileField(default='default.jpg', upload_to=petcare.models.custom_media_path)),
-                ('buyAmount', models.IntegerField(default=0)),
-                ('shopId', models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to='petcare.Shop')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Order',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=1000)),
-                ('price', models.FloatField()),
-                ('amount', models.IntegerField()),
-                ('createdAt', models.DateTimeField(auto_now_add=True)),
-                ('deliveriedOn', models.DateTimeField(blank=True, null=True)),
-                ('averageRating', models.IntegerField(blank=True, null=True)),
-                ('categories', django.contrib.postgres.fields.ArrayField(base_field=django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), size=None), size=None)),
-                ('imageURL', models.FileField(default='default.jpg', upload_to=petcare.models.custom_media_path)),
-                ('longDescription', models.TextField(blank=True, null=True)),
-                ('shortDescription', models.TextField(blank=True, null=True)),
-                ('extra_data', models.TextField(blank=True, default='{}')),
-                ('productId', models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to='petcare.Product')),
-                ('userId', models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=1000)),
+                ("price", models.FloatField()),
+                ("amount", models.IntegerField()),
+                ("createdAt", models.DateTimeField(auto_now_add=True)),
+                ("deliveriedOn", models.DateTimeField(blank=True, null=True)),
+                ("averageRating", models.IntegerField(blank=True, null=True)),
+                (
+                    "categories",
+                    django.contrib.postgres.fields.ArrayField(
+                        base_field=django.contrib.postgres.fields.ArrayField(
+                            base_field=models.IntegerField(), size=None
+                        ),
+                        size=None,
+                    ),
+                ),
+                (
+                    "imageURL",
+                    models.FileField(
+                        default="default.jpg",
+                        upload_to=petcare.models.custom_media_path,
+                    ),
+                ),
+                ("longDescription", models.TextField(blank=True, null=True)),
+                ("shortDescription", models.TextField(blank=True, null=True)),
+                ("extra_data", models.TextField(blank=True, default="{}")),
+                (
+                    "productId",
+                    models.ForeignKey(
+                        blank=True,
+                        default=None,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="petcare.Product",
+                    ),
+                ),
+                (
+                    "userId",
+                    models.ForeignKey(
+                        blank=True,
+                        default=None,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
