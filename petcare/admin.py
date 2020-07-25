@@ -13,14 +13,46 @@ from .models import (
     Chat,
 )
 
+
+class ShopAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = PetcareUser(username=username, is_superuser=False, isShop=True)
+        user.set_password(password)
+        user.save()
+        super().save_model(request, obj, form, change)
+
+
+class CustomerAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = PetcareUser(username=username, is_superuser=False, isCustomer=True)
+        user.set_password(password)
+        user.save()
+        super().save_model(request, obj, form, change)
+
+
+class NormalAdmin(admin.ModelAdmin):
+    def save_model(self, request, obj, form, change):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = PetcareUser(username=username, is_superuser=False, isAdmin=True)
+        user.set_password(password)
+        user.save()
+        super().save_model(request, obj, form, change)
+
+
+admin.site.site_header = 'PetCare RootAdmin'
 admin.site.register(PetcareUser)
 admin.site.register(Sale)
-admin.site.register(Customer)
-admin.site.register(Admin)
 admin.site.register(Cart)
 admin.site.register(Clinic)
 admin.site.register(Chat)
-admin.site.register(Shop)
+admin.site.register(Admin, NormalAdmin)
+admin.site.register(Shop, ShopAdmin)
+admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Product)
 admin.site.register(Order)
 admin.site.register(Review)
