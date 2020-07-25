@@ -72,6 +72,12 @@ class ShopViewSet(viewsets.ModelViewSet):
         user.save()
         return super().create(request, *args, **kwargs)
 
+    # def update(self, request, *args, **kwargs):
+    #     super().update(request, *args, **kwargs)
+    #     # Change password
+    #     # Lay id cua thang request, change password cua user
+    #     return {"Status": "Done"}
+
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()

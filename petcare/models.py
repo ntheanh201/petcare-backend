@@ -1,10 +1,5 @@
-import json
-from typing import Dict
-
 from django.contrib.auth.models import User, AbstractUser
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.conf import settings
 import uuid
 
 from petcare.enums import OrderStatus, Gender, AdminRole
@@ -21,6 +16,7 @@ class Image(models.Model):
     )
 
 
+# RootAdmin
 class PetcareUser(AbstractUser):
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
@@ -34,6 +30,18 @@ class PetcareUser(AbstractUser):
     isAdmin = models.BooleanField(null=False, default=False)
     isShop = models.BooleanField(null=False, default=False)
     isCustomer = models.BooleanField(null=False, default=False)
+
+    def addClinic(self):
+        pass
+
+    def editClinic(self):
+        pass
+
+    def editAdmin(self):
+        pass
+
+    def addAdmin(self):
+        pass
 
     def __str__(self):
         return f"{self.username} - {self.fullname}"
@@ -54,6 +62,12 @@ class Shop(models.Model):
     ratings = models.FloatField(null=True, blank=True)
     isVip = models.BooleanField(null=False, default=False)
     vipExpires = models.DateTimeField(null=True, blank=True)
+
+    def getAllShop(self):
+        return Shop.objects.all()
+
+    def getShopById(self, id):
+        return Shop.objects.filter(id=id).first()
 
     def checkVIP(self):
         if self.isVip:
@@ -96,7 +110,6 @@ class Product(models.Model):
     price = models.FloatField(null=False)
     amount = models.IntegerField(null=False)
     productType = models.CharField(max_length=1024, null=False, blank=False)
-    rate = models.FloatField(null=False)
     productImage = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
@@ -105,6 +118,7 @@ class Product(models.Model):
     shopId = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
+    description = models.TextField(null=True, blank=True)
 
     def checkApproval(self):
         if self.isApproval:
@@ -117,11 +131,8 @@ class Product(models.Model):
 
 class Cart(models.Model):
     price = models.FloatField(null=False)
-    quantity = models.IntegerField(null=False, default=1)
-    # userId = models.ForeignKey(
-    #     Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
-    # )
-    userId = models.OneToOneField(
+    quantity = models.Intege8rField(null=False, default=1)
+    customerId = models.OneToOneField(
         Customer,
         on_delete=models.CASCADE,
         primary_key=True,
@@ -132,7 +143,7 @@ class Cart(models.Model):
     )
 
     def __str__(self):
-        return f"{self.userId.username} - {self.productId.name}"
+        return f"{self.customerId.username} - {self.productId.name}"
 
 
 class Admin(models.Model):
@@ -152,7 +163,6 @@ class Admin(models.Model):
         ],
         default=Gender.UNDEFINED.value,
     )
-    fullname = models.CharField(max_length=1024, null=True, blank=True)
     phone = models.CharField(max_length=15, null=True, blank=True)
     address = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
@@ -187,7 +197,10 @@ class Clinic(models.Model):
     )
     address = models.CharField(max_length=100, null=True, blank=True)
     specialist = models.CharField(max_length=100, null=True, blank=True)
-    data = models.TextField()
+    description = models.TextField(default="")
+
+    def getName(self):
+        return self.name
 
     def __str__(self):
         return f"{self.name}"
@@ -197,7 +210,7 @@ class Order(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     price = models.FloatField(null=False)
     amount = models.IntegerField(null=False)
-    deliveriedOn = models.DateTimeField(null=True, blank=True)
+    deliveryOn = models.DateTimeField(null=True, blank=True)
     imageURL = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
@@ -212,11 +225,9 @@ class Order(models.Model):
         ],
         default=OrderStatus.CHECKING.value,
     )
-    longDescription = models.TextField(null=True, blank=True)
-    shortDescription = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     address = models.CharField(max_length=1000, null=True, blank=True)
-    extra_data = models.TextField(blank=True, null=False, default="{}")
-    userId = models.ForeignKey(
+    customerId = models.ForeignKey(
         Customer, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
     productId = models.ForeignKey(
@@ -227,19 +238,14 @@ class Order(models.Model):
     )
 
     def __str__(self):
-        return f"{self.userId.username} - {self.productId.name}"
-
-    def extra_data_dict(self) -> Dict:
-        if self.extra_data is None or len(self.extra_data) == 0:
-            return {}
-        return json.loads(self.extra_data)
+        return f"{self.customerId.username} - {self.productId.name}"
 
 
 class Review(models.Model):
     createdAt = models.DateTimeField(auto_now_add=True)
     rating = models.FloatField(null=False, default=0)
     reviewContent = models.CharField(max_length=1000, null=True, blank=True)
-    userId = models.ForeignKey(
+    customerId = models.ForeignKey(
         Customer, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
     shopId = models.ForeignKey(
@@ -247,12 +253,12 @@ class Review(models.Model):
     )
 
     def __str__(self):
-        return f"{self.userId.username} - {self.shopId.username} - {self.rating}"
+        return f"{self.customerId.username} - {self.shopId.username} - {self.rating}"
 
 
 class Sale(models.Model):
     name = models.CharField(max_length=1024, null=False, blank=False)
-    date = models.DateTimeField(auto_now_add=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
     salePrice = models.FloatField(null=False)
     shopId = models.ForeignKey(
         Shop, on_delete=models.SET_NULL, null=True, default=None, blank=True,
@@ -269,10 +275,13 @@ class Chat(models.Model):
     shopId = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=False, default=None, blank=False,
     )
-    userId = models.ForeignKey(
+    customerId = models.ForeignKey(
         Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
     )
     content = models.TextField(null=False, blank=False)
 
+    def getContent(self):
+        return self.content
+
     def __str__(self):
-        return f"{self.shopId.username} - {self.userId}: {self.content}"
+        return f"{self.shopId.username} - {self.customerId}: {self.content}"
