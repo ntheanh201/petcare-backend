@@ -63,11 +63,6 @@ class ShopViewSet(viewsets.ModelViewSet):
         permissions.AllowAny
     ]
 
-    # def retrieve(self, request, pk=None):
-    #     username = request.user.username
-    #     queryset = Shop.objects.filter(username=username)
-    #     print(queryset)
-
     def create(self, request, *args, **kwargs):
         username = request.data.get("username")
         password = request.data.get("password")
@@ -110,6 +105,7 @@ class CustomerViewSet(viewsets.ModelViewSet):
         password = request.data.get("password")
 
         user = PetcareUser(username=username, password=password, is_superuser=False, isCustomer=True)
+        user.set_password(password)
         user.save()
         return super().create(request, *args, **kwargs)
 
@@ -126,6 +122,7 @@ class AdminViewSet(viewsets.ModelViewSet):
         password = request.data.get("password")
 
         user = PetcareUser(username=username, password=password, is_superuser=False, isAdmin=True)
+        user.set_password(password)
         user.save()
         return super().create(request, *args, **kwargs)
 
