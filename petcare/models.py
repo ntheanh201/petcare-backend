@@ -7,7 +7,7 @@ from django.db import models
 from django.conf import settings
 import uuid
 
-from petcare.enums import OrderStatus, Gender
+from petcare.enums import OrderStatus, Gender, AdminRole
 
 
 def custom_media_path(instance, filename):
@@ -36,12 +36,13 @@ class PetcareUser(AbstractUser):
     isCustomer = models.BooleanField(null=False, default=False)
 
     def __str__(self):
-        return "user: {}".format(self.username)
+        return f"{self.username} - {self.fullname}"
 
 
 class Shop(models.Model):
     username = models.CharField(max_length=100, default="", unique=True)
-    password = models.CharField(max_length=32, default="")
+    password = models.CharField(max_length=100, default="")
+    name = models.CharField(max_length=1000, null=False, blank=False, default="")
     businessLicense = models.TextField(null=True, default="", blank=True)
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
@@ -54,16 +55,22 @@ class Shop(models.Model):
     isVip = models.BooleanField(null=False, default=False)
     vipExpires = models.DateTimeField(null=True, blank=True)
 
+    def checkVIP(self):
+        if self.isVip:
+            return "VIP"
+        return "Normal"
+
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.id}: {self.username} - {self.name} - {self.checkVIP()}"
 
 
 class Customer(models.Model):
     username = models.CharField(max_length=100, default="", unique=True)
-    password = models.CharField(max_length=32, default="")
+    password = models.CharField(max_length=100, default="")
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
+    name = models.CharField(max_length=1000, null=False, blank=False, default="")
     gender = models.SmallIntegerField(
         null=False,
         blank=False,
@@ -81,7 +88,7 @@ class Customer(models.Model):
     dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.id}: {self.username} - {self.name}"
 
 
 class Product(models.Model):
@@ -99,15 +106,26 @@ class Product(models.Model):
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
 
+    def checkApproval(self):
+        if self.isApproval:
+            return "Approved"
+        return "Not Approved"
+
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} - {self.checkApproval()}"
 
 
 class Cart(models.Model):
     price = models.FloatField(null=False)
     quantity = models.IntegerField(null=False, default=1)
-    userId = models.ForeignKey(
-        Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    # userId = models.ForeignKey(
+    #     Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    # )
+    userId = models.OneToOneField(
+        Customer,
+        on_delete=models.CASCADE,
+        primary_key=True,
+        default=None
     )
     productId = models.ForeignKey(
         Product, on_delete=models.CASCADE, null=True, default=None, blank=True,
@@ -119,7 +137,8 @@ class Cart(models.Model):
 
 class Admin(models.Model):
     username = models.CharField(max_length=100, default="")
-    password = models.CharField(max_length=32, default="")
+    password = models.CharField(max_length=100, default="")
+    name = models.CharField(max_length=1000, null=False, blank=False, default="")
     avatar = models.FileField(
         upload_to=custom_media_path, max_length=100, default="default.jpg"
     )
@@ -138,13 +157,27 @@ class Admin(models.Model):
     address = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
     dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
-    role = models.IntegerField(default=1, null=False, blank=False)
+    role = models.SmallIntegerField(
+        null=False,
+        blank=False,
+        choices=[
+            (AdminRole.LEVEL1.value, AdminRole.LEVEL1.name),
+            (AdminRole.LEVEL2.value, AdminRole.LEVEL2.name),
+        ],
+        default=AdminRole.LEVEL1.value,
+    )
     shops = models.ManyToManyField(Shop, null=True, blank=True, default=None)
     customers = models.ManyToManyField(Customer, null=True, blank=True, default=None)
     products = models.ManyToManyField(Product, null=True, blank=True, default=None)
 
+    def checkRole(self):
+        if self.role == AdminRole.LEVEL1.value:
+            return "Level 1"
+        if self.role == AdminRole.LEVEL2.value:
+            return "Level 2"
+
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.id}: {self.username} - {self.name} - {self.checkRole()}"
 
 
 class Clinic(models.Model):
@@ -225,8 +258,11 @@ class Sale(models.Model):
         Shop, on_delete=models.SET_NULL, null=True, default=None, blank=True,
     )
 
+    def getShopName(self):
+        return self.shopId.name
+
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} - {self.getShopName()}"
 
 
 class Chat(models.Model):

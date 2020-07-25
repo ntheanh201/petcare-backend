@@ -13,3 +13,8 @@ class OrderStatus(Enum):
     SHIPPING = 1
     DONE = 2
     CANCEL = 3
+
+@unique
+class AdminRole(Enum):
+    LEVEL1 = 1
+    LEVEL2 = 2

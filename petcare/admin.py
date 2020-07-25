@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.hashers import make_password
+
 from .models import (
     PetcareUser,
     Sale,
@@ -21,6 +23,9 @@ class ShopAdmin(admin.ModelAdmin):
         user = PetcareUser(username=username, is_superuser=False, isShop=True)
         user.set_password(password)
         user.save()
+
+        obj.password = make_password(password)
+        obj.save()
         super().save_model(request, obj, form, change)
 
 
@@ -31,6 +36,9 @@ class CustomerAdmin(admin.ModelAdmin):
         user = PetcareUser(username=username, is_superuser=False, isCustomer=True)
         user.set_password(password)
         user.save()
+
+        obj.password = make_password(password)
+        obj.save()
         super().save_model(request, obj, form, change)
 
 
@@ -41,6 +49,9 @@ class NormalAdmin(admin.ModelAdmin):
         user = PetcareUser(username=username, is_superuser=False, isAdmin=True)
         user.set_password(password)
         user.save()
+
+        obj.password = make_password(password)
+        obj.save()
         super().save_model(request, obj, form, change)
 
 
