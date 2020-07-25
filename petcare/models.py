@@ -131,7 +131,7 @@ class Product(models.Model):
 
 class Cart(models.Model):
     price = models.FloatField(null=False)
-    quantity = models.Intege8rField(null=False, default=1)
+    quantity = models.IntegerField(null=False, default=1)
     customerId = models.OneToOneField(
         Customer,
         on_delete=models.CASCADE,
