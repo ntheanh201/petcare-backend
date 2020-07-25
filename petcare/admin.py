@@ -57,13 +57,13 @@ class NormalAdmin(admin.ModelAdmin):
 
 admin.site.site_header = 'PetCare RootAdmin'
 admin.site.register(PetcareUser)
-# admin.site.register(Sale)
-# admin.site.register(Cart)
+admin.site.register(Sale)
+admin.site.register(Cart)
 admin.site.register(Clinic)
 # admin.site.register(Chat)
 admin.site.register(Admin, NormalAdmin)
 admin.site.register(Shop, ShopAdmin)
 admin.site.register(Customer, CustomerAdmin)
-# admin.site.register(Product)
-# admin.site.register(Order)
-# admin.site.register(Review)
+admin.site.register(Product)
+admin.site.register(Order)
+admin.site.register(Review)
