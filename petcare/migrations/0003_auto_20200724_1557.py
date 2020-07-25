@@ -6,28 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0002_auto_20200724_1535'),
+        ("petcare", "0002_auto_20200724_1535"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='admin',
-            name='customers',
-            field=models.ManyToManyField(blank=True, default=None, null=True, to='petcare.Customer'),
+            model_name="admin",
+            name="customers",
+            field=models.ManyToManyField(
+                blank=True, default=None, null=True, to="petcare.Customer"
+            ),
         ),
         migrations.AlterField(
-            model_name='admin',
-            name='products',
-            field=models.ManyToManyField(blank=True, default=None, null=True, to='petcare.Product'),
+            model_name="admin",
+            name="products",
+            field=models.ManyToManyField(
+                blank=True, default=None, null=True, to="petcare.Product"
+            ),
         ),
         migrations.AlterField(
-            model_name='admin',
-            name='shops',
-            field=models.ManyToManyField(blank=True, default=None, null=True, to='petcare.Shop'),
+            model_name="admin",
+            name="shops",
+            field=models.ManyToManyField(
+                blank=True, default=None, null=True, to="petcare.Shop"
+            ),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='carts',
-            field=models.ManyToManyField(blank=True, default=None, null=True, to='petcare.Cart'),
+            model_name="product",
+            name="carts",
+            field=models.ManyToManyField(
+                blank=True, default=None, null=True, to="petcare.Cart"
+            ),
         ),
     ]

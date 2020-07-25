@@ -7,35 +7,32 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0006_shop_warehouseaddress'),
+        ("petcare", "0006_shop_warehouseaddress"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='cart',
-            name='name',
-        ),
-        migrations.RemoveField(
-            model_name='order',
-            name='name',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='carts',
-        ),
+        migrations.RemoveField(model_name="cart", name="name",),
+        migrations.RemoveField(model_name="order", name="name",),
+        migrations.RemoveField(model_name="product", name="carts",),
         migrations.AddField(
-            model_name='cart',
-            name='productId',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='petcare.Product'),
+            model_name="cart",
+            name="productId",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="petcare.Product",
+            ),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='username',
-            field=models.CharField(default='', max_length=100, unique=True),
+            model_name="customer",
+            name="username",
+            field=models.CharField(default="", max_length=100, unique=True),
         ),
         migrations.AlterField(
-            model_name='shop',
-            name='username',
-            field=models.CharField(default='', max_length=100, unique=True),
+            model_name="shop",
+            name="username",
+            field=models.CharField(default="", max_length=100, unique=True),
         ),
     ]

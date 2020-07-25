@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 import uuid
 
-from petcare.enums import OrderStatus, Gender, AdminRole
+from petcare.enums import OrderStatus, Gender, AdminRole, Sender
 
 
 def custom_media_path(instance, filename):
@@ -60,8 +60,6 @@ class Shop(models.Model):
     warehouseAddress = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
     ratings = models.FloatField(null=True, blank=True)
-    isVip = models.BooleanField(null=False, default=False)
-    vipExpires = models.DateTimeField(null=True, blank=True)
 
     def getAllShop(self):
         return Shop.objects.all()
@@ -69,13 +67,8 @@ class Shop(models.Model):
     def getShopById(self, id):
         return Shop.objects.filter(id=id).first()
 
-    def checkVIP(self):
-        if self.isVip:
-            return "VIP"
-        return "Normal"
-
     def __str__(self):
-        return f"{self.id}: {self.username} - {self.name} - {self.checkVIP()}"
+        return f"{self.id}: {self.username} - {self.name}"
 
 
 class Customer(models.Model):
@@ -100,6 +93,14 @@ class Customer(models.Model):
     address = models.CharField(max_length=100, null=True, blank=True)
     email = models.CharField(max_length=50, null=True, blank=True)
     dateOfBirth = models.CharField(max_length=100, null=True, blank=True)
+
+    def getInfo(self):
+        return f"{self.username} - {self.name} - {self.gender} - {self.fullname} - {self.phone} - " \
+               f"{self.address} - {self.email} - {self.dateOfBirth} "
+
+    def saveInfo(self):
+        # save info of customer from form
+        pass
 
     def __str__(self):
         return f"{self.id}: {self.username} - {self.name}"
@@ -133,10 +134,7 @@ class Cart(models.Model):
     price = models.FloatField(null=False)
     quantity = models.IntegerField(null=False, default=1)
     customerId = models.OneToOneField(
-        Customer,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        default=None
+        Customer, on_delete=models.CASCADE, primary_key=True, default=None
     )
     productId = models.ForeignKey(
         Product, on_delete=models.CASCADE, null=True, default=None, blank=True,
@@ -186,6 +184,26 @@ class Admin(models.Model):
         if self.role == AdminRole.LEVEL2.value:
             return "Level 2"
 
+    def updateRole(self, id, role):
+        admin = Admin.objects.filter(id=id).first()
+        if role == AdminRole.LEVEL1.value:
+            admin.role = AdminRole.LEVEL1.value
+        if role == AdminRole.LEVEL2.value:
+            admin.role = AdminRole.LEVEL2.value
+        admin.save()
+
+    def addAdmin(self):
+        # add admin from form
+        pass
+
+    def deleteAdmin(self, id):
+        # delete admin
+        pass
+
+    def saveAdminInfo(self):
+        # get user info from forms
+        pass
+
     def __str__(self):
         return f"{self.id}: {self.username} - {self.name} - {self.checkRole()}"
 
@@ -201,6 +219,10 @@ class Clinic(models.Model):
 
     def getName(self):
         return self.name
+
+    def deleteClinic(self, id):
+        # delete clinic by id
+        pass
 
     def __str__(self):
         return f"{self.name}"
@@ -237,6 +259,10 @@ class Order(models.Model):
         Shop, on_delete=models.CASCADE, null=True, default=None, blank=True,
     )
 
+    def createOrder(self):
+        # create an order
+        pass
+
     def __str__(self):
         return f"{self.customerId.username} - {self.productId.name}"
 
@@ -271,6 +297,24 @@ class Sale(models.Model):
         return f"{self.name} - {self.getShopName()}"
 
 
+class Message(models.Model):
+    createdAt = models.DateTimeField(auto_now_add=True)
+    sender = models.SmallIntegerField(
+        null=False,
+        blank=False,
+        choices=[
+            (Sender.CUSTOMER.value, Sender.CUSTOMER.name),
+            (Sender.SHOP.value, Sender.SHOP.name),
+        ],
+        default=Sender.CUSTOMER.value,
+    )
+    senderId = models.IntegerField(null=False, blank=False, default=0)
+    content = models.TextField(default="")
+
+    def __str__(self):
+        return f"{self.content}"
+
+
 class Chat(models.Model):
     shopId = models.ForeignKey(
         Shop, on_delete=models.CASCADE, null=False, default=None, blank=False,
@@ -278,10 +322,9 @@ class Chat(models.Model):
     customerId = models.ForeignKey(
         Customer, on_delete=models.CASCADE, null=False, default=None, blank=False,
     )
-    content = models.TextField(null=False, blank=False)
-
-    def getContent(self):
-        return self.content
+    messages = models.ForeignKey(
+        Message, on_delete=models.CASCADE, null=False, default=None, blank=False,
+    )
 
     def __str__(self):
-        return f"{self.shopId.username} - {self.customerId}: {self.content}"
+        return f"{self.shopId.username} - {self.customerId}: {self.messages}"

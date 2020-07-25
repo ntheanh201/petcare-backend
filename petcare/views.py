@@ -50,7 +50,6 @@ class PetcareUserViewSet(viewsets.ViewSet):
     #     return Response(serializer.data)
 
 
-
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -59,9 +58,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 class ShopViewSet(viewsets.ModelViewSet):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         username = request.data.get("username")
@@ -102,15 +99,15 @@ class CartViewSet(viewsets.ModelViewSet):
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         username = request.data.get("username")
         password = request.data.get("password")
 
-        user = PetcareUser(username=username, password=password, is_superuser=False, isCustomer=True)
+        user = PetcareUser(
+            username=username, password=password, is_superuser=False, isCustomer=True
+        )
         user.set_password(password)
         user.save()
         return super().create(request, *args, **kwargs)
@@ -119,15 +116,15 @@ class CustomerViewSet(viewsets.ModelViewSet):
 class AdminViewSet(viewsets.ModelViewSet):
     queryset = Admin.objects.all()
     serializer_class = AdminSerializer
-    permission_classes = [
-        permissions.AllowAny
-    ]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         username = request.data.get("username")
         password = request.data.get("password")
 
-        user = PetcareUser(username=username, password=password, is_superuser=False, isAdmin=True)
+        user = PetcareUser(
+            username=username, password=password, is_superuser=False, isAdmin=True
+        )
         user.set_password(password)
         user.save()
         return super().create(request, *args, **kwargs)

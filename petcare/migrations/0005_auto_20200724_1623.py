@@ -6,23 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0004_auto_20200724_1608'),
+        ("petcare", "0004_auto_20200724_1608"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='status',
-            field=models.SmallIntegerField(choices=[(0, 'CHECKING'), (1, 'SHIPPING'), (2, 'DONE'), (3, 'CANCEL')], default=0),
+            model_name="order",
+            name="status",
+            field=models.SmallIntegerField(
+                choices=[(0, "CHECKING"), (1, "SHIPPING"), (2, "DONE"), (3, "CANCEL")],
+                default=0,
+            ),
         ),
         migrations.AlterField(
-            model_name='admin',
-            name='gender',
-            field=models.SmallIntegerField(choices=[(0, 'MALE'), (1, 'FEMALE'), (2, 'UNDEFINED')], default=2),
+            model_name="admin",
+            name="gender",
+            field=models.SmallIntegerField(
+                choices=[(0, "MALE"), (1, "FEMALE"), (2, "UNDEFINED")], default=2
+            ),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='gender',
-            field=models.SmallIntegerField(choices=[(0, 'MALE'), (1, 'FEMALE'), (2, 'UNDEFINED')], default=2),
+            model_name="customer",
+            name="gender",
+            field=models.SmallIntegerField(
+                choices=[(0, "MALE"), (1, "FEMALE"), (2, "UNDEFINED")], default=2
+            ),
         ),
     ]

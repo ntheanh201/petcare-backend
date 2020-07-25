@@ -61,10 +61,10 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-] # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
+    "http://localhost:3000",
+]  # If this is used, then not need to use `CORS_ORIGIN_ALLOW_ALL = True`
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:3000',
+    "http://localhost:3000",
 ]
 
 ROOT_URLCONF = "petcare_backend.urls"
@@ -119,7 +119,7 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     "DEFAULT_PERMISSION_CLASSES": [
         # "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-        'rest_framework.permissions.AllowAny',
+        "rest_framework.permissions.AllowAny",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",

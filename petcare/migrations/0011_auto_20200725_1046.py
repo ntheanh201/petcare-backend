@@ -7,77 +7,51 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0010_auto_20200725_0714'),
+        ("petcare", "0010_auto_20200725_0714"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='chat',
-            old_name='userId',
-            new_name='customerId',
+            model_name="chat", old_name="userId", new_name="customerId",
         ),
         migrations.RenameField(
-            model_name='order',
-            old_name='userId',
-            new_name='customerId',
+            model_name="order", old_name="userId", new_name="customerId",
         ),
         migrations.RenameField(
-            model_name='order',
-            old_name='deliveriedOn',
-            new_name='deliveryOn',
+            model_name="order", old_name="deliveriedOn", new_name="deliveryOn",
         ),
         migrations.RenameField(
-            model_name='order',
-            old_name='longDescription',
-            new_name='description',
+            model_name="order", old_name="longDescription", new_name="description",
         ),
         migrations.RenameField(
-            model_name='review',
-            old_name='userId',
-            new_name='customerId',
+            model_name="review", old_name="userId", new_name="customerId",
         ),
         migrations.RenameField(
-            model_name='sale',
-            old_name='date',
-            new_name='createdAt',
+            model_name="sale", old_name="date", new_name="createdAt",
         ),
-        migrations.RemoveField(
-            model_name='admin',
-            name='fullname',
-        ),
-        migrations.RemoveField(
-            model_name='cart',
-            name='userId',
-        ),
-        migrations.RemoveField(
-            model_name='clinic',
-            name='data',
-        ),
-        migrations.RemoveField(
-            model_name='order',
-            name='extra_data',
-        ),
-        migrations.RemoveField(
-            model_name='order',
-            name='shortDescription',
-        ),
-        migrations.RemoveField(
-            model_name='product',
-            name='rate',
+        migrations.RemoveField(model_name="admin", name="fullname",),
+        migrations.RemoveField(model_name="cart", name="userId",),
+        migrations.RemoveField(model_name="clinic", name="data",),
+        migrations.RemoveField(model_name="order", name="extra_data",),
+        migrations.RemoveField(model_name="order", name="shortDescription",),
+        migrations.RemoveField(model_name="product", name="rate",),
+        migrations.AddField(
+            model_name="cart",
+            name="customerId",
+            field=models.OneToOneField(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to="petcare.Customer",
+            ),
         ),
         migrations.AddField(
-            model_name='cart',
-            name='customerId',
-            field=models.OneToOneField(default=None, on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='petcare.Customer'),
+            model_name="clinic", name="description", field=models.TextField(default=""),
         ),
         migrations.AddField(
-            model_name='clinic',
-            name='description',
-            field=models.TextField(default=''),
-        ),
-        migrations.AddField(
-            model_name='product',
-            name='description',
+            model_name="product",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
     ]

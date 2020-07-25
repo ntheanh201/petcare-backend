@@ -6,23 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0009_auto_20200725_0705'),
+        ("petcare", "0009_auto_20200725_0705"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='admin',
-            name='password',
-            field=models.CharField(default='', max_length=100),
+            model_name="admin",
+            name="password",
+            field=models.CharField(default="", max_length=100),
         ),
         migrations.AlterField(
-            model_name='customer',
-            name='password',
-            field=models.CharField(default='', max_length=100),
+            model_name="customer",
+            name="password",
+            field=models.CharField(default="", max_length=100),
         ),
         migrations.AlterField(
-            model_name='shop',
-            name='password',
-            field=models.CharField(default='', max_length=100),
+            model_name="shop",
+            name="password",
+            field=models.CharField(default="", max_length=100),
         ),
     ]

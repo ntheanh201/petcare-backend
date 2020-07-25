@@ -7,37 +7,41 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0008_auto_20200724_2005'),
+        ("petcare", "0008_auto_20200724_2005"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='cart',
-            name='id',
+        migrations.RemoveField(model_name="cart", name="id",),
+        migrations.AddField(
+            model_name="admin",
+            name="name",
+            field=models.CharField(default="", max_length=1000),
         ),
         migrations.AddField(
-            model_name='admin',
-            name='name',
-            field=models.CharField(default='', max_length=1000),
+            model_name="customer",
+            name="name",
+            field=models.CharField(default="", max_length=1000),
         ),
         migrations.AddField(
-            model_name='customer',
-            name='name',
-            field=models.CharField(default='', max_length=1000),
-        ),
-        migrations.AddField(
-            model_name='shop',
-            name='name',
-            field=models.CharField(default='', max_length=1000),
+            model_name="shop",
+            name="name",
+            field=models.CharField(default="", max_length=1000),
         ),
         migrations.AlterField(
-            model_name='admin',
-            name='role',
-            field=models.SmallIntegerField(choices=[(1, 'LEVEL1'), (2, 'LEVEL2')], default=1),
+            model_name="admin",
+            name="role",
+            field=models.SmallIntegerField(
+                choices=[(1, "LEVEL1"), (2, "LEVEL2")], default=1
+            ),
         ),
         migrations.AlterField(
-            model_name='cart',
-            name='userId',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='petcare.Customer'),
+            model_name="cart",
+            name="userId",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                primary_key=True,
+                serialize=False,
+                to="petcare.Customer",
+            ),
         ),
     ]

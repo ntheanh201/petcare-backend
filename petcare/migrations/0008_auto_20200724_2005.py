@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0007_auto_20200724_1705'),
+        ("petcare", "0007_auto_20200724_1705"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='petcareuser',
-            name='isAdmin',
+            model_name="petcareuser",
+            name="isAdmin",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='petcareuser',
-            name='isCustomer',
+            model_name="petcareuser",
+            name="isCustomer",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='petcareuser',
-            name='isShop',
+            model_name="petcareuser",
+            name="isShop",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='shop',
-            name='businessLicense',
-            field=models.TextField(blank=True, default='', null=True),
+            model_name="shop",
+            name="businessLicense",
+            field=models.TextField(blank=True, default="", null=True),
         ),
     ]

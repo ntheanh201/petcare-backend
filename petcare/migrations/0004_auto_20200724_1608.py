@@ -6,23 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('petcare', '0003_auto_20200724_1557'),
+        ("petcare", "0003_auto_20200724_1557"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='isApproval',
+            model_name="product",
+            name="isApproval",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='shop',
-            name='isVip',
-            field=models.BooleanField(default=False),
+            model_name="shop", name="isVip", field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='shop',
-            name='vipExpires',
+            model_name="shop",
+            name="vipExpires",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

@@ -7,6 +7,7 @@ class Gender(Enum):
     FEMALE = 1
     UNDEFINED = 2
 
+
 @unique
 class OrderStatus(Enum):
     CHECKING = 0
@@ -14,7 +15,13 @@ class OrderStatus(Enum):
     DONE = 2
     CANCEL = 3
 
+
 @unique
 class AdminRole(Enum):
     LEVEL1 = 1
     LEVEL2 = 2
+
+@unique
+class Sender(Enum):
+    CUSTOMER = 1
+    SHOP = 2
