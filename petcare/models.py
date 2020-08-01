@@ -67,6 +67,19 @@ class Shop(models.Model):
     def getShopById(self, id):
         return Shop.objects.filter(id=id).first()
 
+    def getInfo(self, id):
+        return Shop.objects.filter(id=id).first()
+
+    def updateInfo(self, id):
+        # update info
+        print(id)
+        pass
+
+    def saveInfo(self, data):
+        # save data
+       print(data)
+       pass
+
     def __str__(self):
         return f"{self.id}: {self.username} - {self.name}"
 
@@ -103,7 +116,7 @@ class Customer(models.Model):
         pass
 
     def __str__(self):
-        return f"{self.id}: {self.username} - {self.name}"
+        return f"{self.getInfo()}"
 
 
 class Product(models.Model):
